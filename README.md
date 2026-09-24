@@ -32,16 +32,19 @@ Manual route (optional): `pip install -r requirements.txt`, phir
 
 ### Dashboard dobara kholna (setup ke baad)
 
-Terminal band kar diya ya computer restart ho gaya? `clipforge` folder mein
-wapas jaake ye chalao — dashboard turant khul jayega (dobara install nahi hoga):
+Sabse easy — file par **double-click** karo:
+- **Windows:** `ClipForge.bat`
+- **Mac:** `Start ClipForge.command`
+
+Ya terminal mein ye short command (`clipforge` folder ke andar):
 
 ```bash
-cd clipforge
-python -m clipforge.cli dashboard
+python start.py
 ```
 
-- Jab tak terminal khula hai, dashboard chalta rahega (browser mein `http://127.0.0.1:8765`)
-- Terminal band karoge to dashboard band ho jayega — koi data loss nahi, clips/settings `~/.clipforge/` mein safe rehte hain
+- Dashboard browser mein khul jayega (`http://127.0.0.1:8765`) — dobara install nahi hoga
+- Jab tak terminal/command window khuli hai, dashboard chalta rahega
+- Band karoge to koi data loss nahi — clips/settings `~/.clipforge/` mein safe rehte hain
 - Settings kabhi bhi badal sakte ho: dashboard → **Settings** (dobara wizard chalane ki zaroorat nahi)
 
 ---
