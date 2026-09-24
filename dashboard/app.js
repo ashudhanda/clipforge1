@@ -78,8 +78,12 @@ async function refreshPills() {
   try {
     const q = await api("quota");
     const pill = $("quotaPill");
-    pill.innerHTML = `quota <b>${q.used}/${q.per_day}</b>`;
-    pill.classList.toggle("warn", q.remaining < q.per_upload);
+    if (q && q.used !== undefined && q.per_day) {
+      pill.innerHTML = `quota <b>${q.used}/${q.per_day}</b>`;
+      pill.classList.toggle("warn", q.remaining < q.per_upload);
+    } else {
+      pill.innerHTML = `quota <b>—</b>`;
+    }
   } catch (e) { /* offline-ish, ignore */ }
   try {
     const r = await api("youtube_authorized");
