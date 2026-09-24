@@ -52,6 +52,8 @@ def _api_table():
         "youtube_authorized":  (A.youtube_authorized, ()),
         "youtube_connect":     (A.youtube_connect, ()),
         "youtube_disconnect":  (A.youtube_disconnect, ()),
+        "client_secret_status": (A.client_secret_status, ()),
+        "save_client_secret":  (A.save_client_secret, ("json_text",)),
         # config / setup
         "get_config":      (A.get_config, ()),
         "is_first_run":    (A.is_first_run, ()),
