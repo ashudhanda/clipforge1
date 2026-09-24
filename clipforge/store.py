@@ -234,7 +234,11 @@ def cancel_upload_jobs_for_clip(clip_id):
 
 # ---------------------------------------------------------------- quota
 QUOTA_PER_DAY = 10000
-QUOTA_PER_UPLOAD = 1600  # YouTube Data API cost of one video insert
+# YouTube Data API cost of one video insert. Was 1600 until Dec 2025;
+# current docs put videos.insert at ~100 units (Google notes the figure
+# is subject to change — check the quota-cost page if uploads start
+# hitting quotaExceeded).
+QUOTA_PER_UPLOAD = 100
 
 
 def quota_used_today():
