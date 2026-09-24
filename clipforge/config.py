@@ -168,6 +168,38 @@ def ytdlp_path():
     return exe or "yt-dlp"  # callers catch FileNotFoundError with a hint
 
 
+def ytdlp_available():
+    """True when yt-dlp is usable (binary on PATH or pip module)."""
+    import shutil
+    if shutil.which("yt-dlp"):
+        return True
+    try:
+        import yt_dlp  # noqa: F401
+        return True
+    except ImportError:
+        return False
+
+
+def ytdlp_cmd():
+    """Argv prefix for invoking yt-dlp.
+
+    Prefers the `yt-dlp` binary on PATH; falls back to
+    `python -m yt_dlp` so it keeps working when the Scripts folder
+    isn't on PATH (common on Windows). Only raises FileNotFoundError
+    downstream when yt-dlp isn't installed at all.
+    """
+    import shutil
+    import sys
+    exe = shutil.which("yt-dlp")
+    if exe:
+        return [exe]
+    try:
+        import yt_dlp  # noqa: F401
+        return [sys.executable, "-m", "yt_dlp"]
+    except ImportError:
+        return ["yt-dlp"]  # not installed -> FileNotFoundError + hint
+
+
 def niche_preset(niche_name):
     cfg = load_config()
     presets = cfg.get("niche_presets") or {}
