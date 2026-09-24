@@ -510,7 +510,7 @@ const YT_GUIDE_HTML = `
   <li><b>User Type: External</b> chuno → Create / Get Started</li>
   <li>App name: <code>ClipForge</code>, User support email: <b>apna Gmail</b>, Developer contact: <b>apna Gmail</b> → Save and Continue</li>
   <li>Scopes wala page: kuch mat chhedo → Save and Continue</li>
-  <li><b>"Test users"</b> page → <b>"Add users"</b> → apna Gmail add karo → Save<br><span class="muted small">⚠️ Ye sabse zaroori step hai — bina iske Google login "Access blocked" bolega.</span></li>
+  <li>Left sidebar mein <b>"Audience"</b> par click karo → neeche <b>"Test users"</b> section → <b>"Add users"</b> → apna Gmail add karo → Save<br><span class="muted small">⚠️ Ye sabse zaroori step hai — bina iske Google login "Access blocked" bolega.</span></li>
 </ol>
 <p class="muted small"><b>D. OAuth client (JSON) banao</b></p>
 <ol start="11">
