@@ -1,0 +1,12 @@
+# ClipForge dependencies (all cross-platform wheels)
+yt-dlp>=2024.1.1
+curl_cffi>=0.10          # enables yt-dlp --impersonate (anti-bot TLS)
+faster-whisper>=1.0.0
+google-api-python-client>=2.100.0
+google-auth-oauthlib>=1.2.0
+PyYAML>=6.0
+imageio-ffmpeg>=0.5.0
+opencv-contrib-python-headless>=4.8.0   # contrib needed: YuNet face detector
+onnxruntime>=1.17.0
+numpy>=1.24
+requests>=2.31

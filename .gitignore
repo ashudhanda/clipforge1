@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+
+# ClipForge runtime (lives in ~/.clipforge anyway, but ignore local copies)
+*.log
+clips/
+tmp/
+cache/
+*.mp4
+*.ass
+*.vtt
+token.json
+client_secret.json
+secrets.yaml
+config.yaml
+db.json
+cookies.txt
+
+# Models (downloaded at setup)
+/whisper_model/

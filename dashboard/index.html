@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipForge — Shorts Studio</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="app">
+  <!-- left icon rail -->
+  <nav class="rail" aria-label="Main">
+    <div class="mark">CF</div>
+    <button data-page="generate" class="active" title="Generate">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v3m0 12v3M3 12h3m12 0h3M5.6 5.6l2.1 2.1m8.6 8.6l2.1 2.1m0-12.8l-2.1 2.1M7.7 16.3l-2.1 2.1"/></svg>
+      <span>Generate</span>
+    </button>
+    <button data-page="clips" title="Clips">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      <span>Clips</span>
+    </button>
+    <button data-page="uploads" title="Uploads">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16V4m0 0l-4 4m4-4l4 4M4 20h16"/></svg>
+      <span>Uploads</span>
+    </button>
+    <div class="spacer"></div>
+    <button data-page="settings" title="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.2a1.7 1.7 0 00-1-1.5 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.2a1.7 1.7 0 001.5-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3h0a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.2a1.7 1.7 0 001 1.5h0a1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9v0a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.2a1.7 1.7 0 00-1.5 1z"/></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+
+  <div class="main">
+    <header class="topbar">
+      <h1 class="logo"><span class="shiny">ClipForge</span></h1>
+      <span class="page-title" id="pageTitle">Generate</span>
+      <div class="grow"></div>
+      <span class="pill" id="quotaPill" title="YouTube API quota today">quota <b>…</b></span>
+      <span class="pill" id="ytPill" title="YouTube login">YT <b>…</b></span>
+      <button class="icon-btn" id="themeBtn" title="Dark / light mode">🌙</button>
+    </header>
+
+    <div class="content">
+      <!-- ============ GENERATE ============ -->
+      <section class="page active" id="page-generate">
+        <div class="tabs">
+          <button id="tabAuto" class="active">Auto-research</button>
+          <button id="tabLink">Link mode</button>
+        </div>
+
+        <div id="paneAuto" class="card">
+          <h3>🔍 Auto-research</h3>
+          <p class="muted small">Niche batao — system khud YouTube pe trending long videos dhundhega, captions padhega, best moments nikalega, aur fully-edited Shorts banayega.</p>
+          <div class="grid-2">
+            <label class="field"><span>Niche / category</span>
+              <input type="text" id="autoNiche" list="nicheList" placeholder="podcast">
+              <datalist id="nicheList"></datalist>
+            </label>
+            <label class="field"><span>Kitne clips</span>
+              <input type="number" id="autoClips" min="1" max="20" value="5">
+            </label>
+          </div>
+          <label class="field"><span>Caption style</span><select id="autoStyle"></select></label>
+          <div class="btn-row"><button class="btn" id="autoStart">⚡ Generate clips</button></div>
+          <div id="autoJob" class="hidden mt">
+            <div class="progress"><div id="autoBar"></div></div>
+            <div class="job-log" id="autoLog">Shuru ho raha hai…</div>
+          </div>
+        </div>
+
+        <div id="paneLink" class="card hidden">
+          <h3>🔗 Link mode</h3>
+          <p class="muted small">Kisi bhi YouTube video ka link do — usi video se clips banenge. (AI ki zaroorat nahi.)</p>
+          <label class="field"><span>YouTube video link</span>
+            <input type="text" id="linkUrl" placeholder="https://www.youtube.com/watch?v=…">
+          </label>
+          <div class="grid-2">
+            <label class="field"><span>Kitne clips</span>
+              <input type="number" id="linkClips" min="1" max="20" value="5">
+            </label>
+            <label class="field"><span>Caption style</span><select id="linkStyle"></select></label>
+          </div>
+          <div class="btn-row"><button class="btn" id="linkStart">⚡ Generate clips</button></div>
+          <div id="linkJob" class="hidden mt">
+            <div class="progress"><div id="linkBar"></div></div>
+            <div class="job-log" id="linkLog">Shuru ho raha hai…</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CLIPS ============ -->
+      <section class="page" id="page-clips">
+        <div class="filter-chips" id="clipFilters">
+          <button data-f="all" class="active">All</button>
+          <button data-f="queued">Queued</button>
+          <button data-f="approved">Approved</button>
+          <button data-f="scheduled">Scheduled</button>
+          <button data-f="uploaded">Uploaded</button>
+          <button data-f="rejected">Rejected</button>
+        </div>
+        <div class="clips-layout">
+          <div class="clip-grid" id="clipGrid"></div>
+          <div class="card detail-panel" id="detailPanel">
+            <div class="empty-panel">👈 Koi clip select karo<br><span class="small">preview, edit aur upload yahin hoga</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ UPLOADS ============ -->
+      <section class="page" id="page-uploads">
+        <div class="stat-row">
+          <div class="stat"><div class="num" id="stReady" data-count="0">0</div><div class="lbl">clips ready</div></div>
+          <div class="stat"><div class="num" id="stUploaded" data-count="0">0</div><div class="lbl">uploaded</div></div>
+          <div class="stat"><div class="num" id="stSched" data-count="0">0</div><div class="lbl">scheduled</div></div>
+          <div class="stat"><div class="num" id="stQuota" data-count="0">0</div><div class="lbl">quota used / 10000</div></div>
+        </div>
+        <div class="card">
+          <h3>⏰ Scheduled queue</h3>
+          <div id="schedList"><p class="muted">Loading…</p></div>
+          <div class="btn-row">
+            <button class="btn ghost sm" id="workerBtn">▶ Process due now</button>
+          </div>
+          <p class="muted small">Note: schedule tabhi upload hoga jab ye dashboard (ya <code>clipforge worker</code>) chal raha ho us time pe.</p>
+        </div>
+        <div class="card mt">
+          <h3>📤 Upload history</h3>
+          <div id="histList"><p class="muted">Loading…</p></div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="page" id="page-settings">
+        <div class="grid-2">
+          <div class="card">
+            <h3>📺 Channel</h3>
+            <label class="field"><span>Channel name</span><input type="text" id="sChannel"></label>
+            <label class="field"><span>Default niche</span><select id="sNiche"></select></label>
+            <label class="field"><span>Clips per run</span><input type="number" id="sClipsPerRun" min="1" max="20"></label>
+            <label class="field"><span>Caption style</span><select id="sStyle"></select></label>
+            <label class="field"><span>Hook</span>
+              <select id="sHook"><option value="card">card</option><option value="cold">cold</option><option value="off">off</option></select>
+            </label>
+            <label class="field"><span>Upload privacy</span>
+              <select id="sPrivacy"><option value="public">public</option><option value="unlisted">unlisted</option><option value="private">private</option></select>
+            </label>
+            <div class="check-row"><input type="checkbox" id="sKids"><label for="sKids">Made for kids channel</label></div>
+          </div>
+          <div class="card">
+            <h3>🤖 AI — best moment ranking (optional)</h3>
+            <label class="field"><span>Provider</span>
+              <select id="sLlm">
+                <option value="none">none (rule-based, free)</option>
+                <option value="gemini">gemini (free API key)</option>
+                <option value="openai_compat">openai_compat (OpenAI / Groq / Ollama)</option>
+              </select>
+            </label>
+            <label class="field"><span>Model</span><input type="text" id="sModel" placeholder="gemini-2.0-flash"></label>
+            <label class="field" id="sBaseUrlWrap"><span>Base URL (openai_compat)</span><input type="text" id="sBaseUrl" placeholder="http://localhost:11434/v1"></label>
+            <label class="field"><span>Gemini API key <span class="muted" id="sGemHint"></span></span><input type="password" id="sGemKey" placeholder="••••••" autocomplete="off"></label>
+            <label class="field"><span>OpenAI-compat key (optional) <span class="muted" id="sOaiHint"></span></span><input type="password" id="sOaiKey" placeholder="••••••" autocomplete="off"></label>
+            <p class="muted small">Keys sirf tumhare system pe save hoti hain (0600 permissions). UI mein kabhi wapas nahi dikhengi.</p>
+          </div>
+          <div class="card">
+            <h3>▶️ YouTube connection</h3>
+            <p class="muted small" id="ytStatus">Checking…</p>
+            <div class="btn-row">
+              <button class="btn sm" id="ytConnect">Connect YouTube</button>
+              <button class="btn ghost sm" id="ytDisconnect">Disconnect</button>
+            </div>
+            <details class="hint">
+              <summary>Pehli baar? client_secret.json kaise banayein</summary>
+              <ol>
+                <li><code>console.cloud.google.com</code> → new project</li>
+                <li>"YouTube Data API v3" enable karo</li>
+                <li>Credentials → Create Credentials → OAuth client ID (Desktop app)</li>
+                <li>Download karke <code>~/.clipforge/client_secret.json</code> naam se rakho</li>
+                <li>Phir upar "Connect YouTube" dabao — browser khulega, login karo</li>
+              </ol>
+            </details>
+          </div>
+          <div class="card">
+            <h3>⚠️ Danger zone</h3>
+            <p class="muted small">Scratch downloads (tmp/) saaf karo. Clips, config aur login nahi chhedenge.</p>
+            <div class="btn-row"><button class="btn danger sm" id="clearCache">Clear cache</button></div>
+            <p class="muted small mt">Config location: <code>~/.clipforge/</code></p>
+          </div>
+        </div>
+        <div class="btn-row"><button class="btn" id="saveSettings">💾 Save settings</button></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<!-- ============ first-run wizard ============ -->
+<div class="wizard-overlay hidden" id="wizard">
+  <div class="wizard">
+    <h2>👋 ClipForge setup</h2>
+    <p class="muted small">Ek baar details do — phir sab tumhare system pe save rahega.</p>
+    <div class="steps"><i class="on"></i><i></i><i></i></div>
+
+    <div class="wstep on" data-s="0">
+      <label class="field"><span>Channel name</span><input type="text" id="wChannel" placeholder="Mera Channel"></label>
+      <label class="field"><span>Niche</span><select id="wNiche"></select></label>
+      <label class="field"><span>Ek run mein kitne clips</span><input type="number" id="wClips" min="1" max="20" value="5"></label>
+      <label class="field"><span>Caption style</span><select id="wStyle"></select></label>
+    </div>
+
+    <div class="wstep" data-s="1">
+      <p class="muted small">Best moments ke liye AI optional hai — bina AI bhi chalega (free).</p>
+      <label class="field"><span>AI provider</span>
+        <select id="wLlm">
+          <option value="none">none — bina AI (free)</option>
+          <option value="gemini">gemini — free API key</option>
+          <option value="openai_compat">openai_compat — OpenAI / Groq / Ollama</option>
+        </select>
+      </label>
+      <div id="wLlmFields" class="hidden">
+        <label class="field"><span>Model</span><input type="text" id="wModel" placeholder="gemini-2.0-flash"></label>
+        <label class="field hidden" id="wBaseUrlWrap"><span>Base URL</span><input type="text" id="wBaseUrl" placeholder="http://localhost:11434/v1"></label>
+        <label class="field"><span>API key</span><input type="password" id="wKey" autocomplete="off" placeholder="Google AI Studio se free key"></label>
+      </div>
+    </div>
+
+    <div class="wstep" data-s="2">
+      <div class="check-row"><input type="checkbox" id="wKids"><label for="wKids">Made for kids channel</label></div>
+      <label class="field"><span>Upload privacy</span>
+        <select id="wPrivacy"><option value="public">public</option><option value="unlisted">unlisted</option><option value="private">private</option></select>
+      </label>
+      <p class="muted small">YouTube upload ke liye login zaroori hai (Google Cloud ka OAuth client ek baar banana padta hai):</p>
+      <div class="btn-row"><button class="btn ghost sm" id="wYtConnect">Connect YouTube</button><span class="muted small" id="wYtStatus"></span></div>
+      <details class="hint">
+        <summary>client_secret.json kaise banayein</summary>
+        <ol>
+          <li><code>console.cloud.google.com</code> → new project</li>
+          <li>"YouTube Data API v3" enable karo</li>
+          <li>Credentials → Create Credentials → OAuth client ID (Desktop app)</li>
+          <li>Download karke <code>~/.clipforge/client_secret.json</code> naam se rakho</li>
+        </ol>
+      </details>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn ghost" id="wBack">← Back</button>
+      <button class="btn" id="wNext">Next →</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+# ClipForge config — copied to ~/.clipforge/config.yaml on first setup.
+# Edit by hand, or via the dashboard / `clipforge setup` wizard.
+
+# Your YouTube channel name (used in descriptions).
+channel_name: ""
+
+# Default niche for `clipforge auto`. Any text works; presets below tune it.
+niche: "podcast"
+
+# How many clips to build per run (auto / from-link default).
+clips_per_run: 5
+
+# Caption style — one of: hormozi, mrbeast, clean, pop, neon, minimal,
+# bold, karaoke, box, top, mono, punch
+caption_style: "hormozi"
+
+# Hook opening: card (big 2s card), cold (small top text), off (none)
+hook_mode: "card"
+
+# Max title length (YouTube allows 100).
+title_max_len: 100
+
+# Base hashtags (niche tags are added automatically).
+hashtags:
+  - "#Shorts"
+
+# REQUIRED by the YouTube API on every upload. Set true only if your
+# channel is actually made for kids.
+made_for_kids: false
+
+# Upload privacy: public | unlisted | private
+privacy: "public"
+
+# YouTube category id (22 = People & Blogs, 24 = Entertainment, ...)
+youtube_category_id: "22"
+
+# Clip length range (seconds). YouTube Shorts must be <= 180s.
+min_clip_s: 25
+max_clip_s: 58
+
+# Extra seconds downloaded around each moment (for clean cuts).
+segment_pad_s: 3.0
+
+# Download quality for segments (720 keeps files small and fast).
+download_height: 720
+
+# ffmpeg binary override. Empty = auto (imageio-ffmpeg, then PATH).
+ffmpeg_path: ""
+
+# Transcription model for the no-captions fallback (tiny/base/small).
+whisper_model: "base"
+
+# Niche presets — window sizes for moment detection + keywords.
+niche_presets:
+  podcast:
+    window_min_s: 40
+    window_max_s: 70
+    keywords: ["podcast", "interview", "conversation"]
+  gaming:
+    window_min_s: 20
+    window_max_s: 40
+    keywords: ["gameplay", "gaming", "highlights"]
+  finance:
+    window_min_s: 30
+    window_max_s: 60
+    keywords: ["money", "investing", "finance", "stocks"]
+  motivation:
+    window_min_s: 30
+    window_max_s: 60
+    keywords: ["motivation", "mindset", "success"]
+
+# Optional LLM for smarter moment ranking.
+# provider: none | gemini | openai_compat
+# gemini: free key from Google AI Studio -> put in secrets.yaml (llm.gemini_key)
+# openai_compat: OpenAI / Groq / OpenRouter / local Ollama
+llm:
+  provider: "none"
+  model: ""
+  base_url: ""
+
+# Research filters for `clipforge auto`.
+research:
+  min_duration_min: 20   # long videos only
+  max_age_days: 30       # recent
+  min_views: 50000       # popular
+  max_results: 15
