@@ -146,10 +146,15 @@ function pollJob(jobId, barEl, logEl, doneLabel) {
       if (job.status === "done") {
         stopPoll();
         const n = (job.result && job.result.clips ? job.result.clips.length : 0);
+        const err = job.result && job.result.error;
         barEl.style.width = "100%";
-        logEl.innerHTML = "<b>Ho gaya! 🎉</b> " + esc(job.message || (n + " clips taiyaar"));
-        toast(n + " clips taiyaar — Clips page pe dekho");
-        setTimeout(() => showPage("clips"), 1200);
+        if (err || n === 0) {
+          logEl.innerHTML = esc(job.message || err || "koi clip nahi bana");
+        } else {
+          logEl.innerHTML = "<b>Ho gaya! 🎉</b> " + esc(job.message || (n + " clips taiyaar"));
+          toast(n + " clips taiyaar — Clips page pe dekho");
+          setTimeout(() => showPage("clips"), 1200);
+        }
       } else if (job.status === "failed") {
         stopPoll();
         logEl.innerHTML = "<b>Fail ho gaya:</b> " + esc(job.error || job.message || "pata nahi");
