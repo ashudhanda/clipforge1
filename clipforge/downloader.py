@@ -55,7 +55,7 @@ def download_section(video_url, start, end, out_path, height=None,
     for attempt in range(retries + 1):
         if out_path.exists():
             out_path.unlink()
-        cmd = ([C.ytdlp_path(), "--downloader", "ffmpeg",
+        cmd = (C.ytdlp_cmd() + ["--downloader", "ffmpeg",
                 "--download-sections", section,
                 "-f", fmt, "--no-playlist",
                 "-o", str(out_path), "--no-warnings"]
