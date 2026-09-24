@@ -237,9 +237,21 @@ def auto_mode(niche, n_clips=None, caption_style=None, progress_cb=None):
             if RS.last_error == "missing":
                 msg = ("yt-dlp nahi mila — `python setup.py` dobara chalao "
                        "(yt-dlp install hoga), phir Generate dabao.")
+            elif RS.last_error == "filtered_out":
+                st = RS.last_stats or {}
+                r_cfg = cfg.get("research", {})
+                msg = (f"YouTube ne {st.get('found', 0)} videos diye, lekin quality "
+                       f"filter se sab bahar ho gaye "
+                       f"({r_cfg.get('min_duration_min', 20)}+ min lambe, "
+                       f"{r_cfg.get('max_age_days', 30)} din ke andar ke, "
+                       f"{r_cfg.get('min_views', 50000):,}+ views chahiye). "
+                       f"Koi aur niche try karo — ya Link mode mein seedha "
+                       f"video link paste kar do.")
             else:
-                msg = ("YouTube search fail hua (network ya bot-check). "
-                       "Thodi der baad try karo — ya Link mode mein seedha "
+                detail = (RS.last_stderr or "").strip()
+                hint = f" (wajah: {detail[:180]})" if detail else ""
+                msg = ("YouTube search fail hua (network ya bot-check)." + hint +
+                       " Thodi der baad try karo — ya Link mode mein seedha "
                        "video link paste kar do.")
             _cb(progress_cb, "research", 0.1, msg)
             result["error"] = msg
