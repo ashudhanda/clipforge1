@@ -20,6 +20,11 @@ from . import config as C
 
 _SCHEMA = {"clips": {}, "jobs": {}, "quota": {"date": "", "used": 0}}
 
+# Dedicated lock file. IMPORTANT (Windows): the lock must NOT be taken on
+# db.json itself — _write() atomically replaces db.json, and Windows refuses
+# to replace a file that any process (even us) still has open (WinError 5).
+_LOCK_FILE = C.DB_FILE.with_name(C.DB_FILE.name + ".lock")
+
 
 @contextlib.contextmanager
 def _locked(path):
@@ -73,7 +78,7 @@ def _write(data):
 
 
 def _mutate(fn):
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         data = _read()
         result = fn(data)
         _write(data)
@@ -94,13 +99,13 @@ def save_clip(clip):
 
 
 def get_clip(clip_id):
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         return _read()["clips"].get(clip_id)
 
 
 def list_clips(status=None):
     """All clips, newest first. status filters: queued|approved|uploaded|..."""
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         clips = list(_read()["clips"].values())
     clips.sort(key=lambda c: c.get("created_at", 0), reverse=True)
     if status:
@@ -127,7 +132,7 @@ def delete_clip(clip_id):
 
 def clip_titles():
     """All clip titles ever made — used to keep titles unique per batch."""
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         return [c.get("title", "") for c in _read()["clips"].values()
                 if c.get("title")]
 
@@ -136,14 +141,14 @@ def source_video_used(video_url):
     """True when a clip was already built from this source video."""
     if not video_url:
         return False
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         return any(c.get("source_video_url") == video_url
                    for c in _read()["clips"].values())
 
 
 def hook_hashes():
     """Stored perceptual hashes for near-duplicate detection (see dedup)."""
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         return [c.get("hook_dhash") for c in _read()["clips"].values()
                 if c.get("hook_dhash")]
 
@@ -176,13 +181,13 @@ def update_job(job_id, **fields):
 
 
 def get_job(job_id):
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         return _read()["jobs"].get(job_id)
 
 
 def list_jobs(kind=None, status=None):
     """Jobs, newest first. status: one value or a list of values."""
-    with _locked(C.DB_FILE):
+    with _locked(_LOCK_FILE):
         jobs = list(_read()["jobs"].values())
     jobs.sort(key=lambda j: j.get("created_at", 0), reverse=True)
     if kind:
