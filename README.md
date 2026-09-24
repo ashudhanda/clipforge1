@@ -30,6 +30,20 @@ deta hai**. Pehli baar hai to dashboard ke andar hi setup wizard aayega
 Manual route (optional): `pip install -r requirements.txt`, phir
 `python -m clipforge.cli dashboard`.
 
+### Dashboard dobara kholna (setup ke baad)
+
+Terminal band kar diya ya computer restart ho gaya? `clipforge` folder mein
+wapas jaake ye chalao — dashboard turant khul jayega (dobara install nahi hoga):
+
+```bash
+cd clipforge
+python -m clipforge.cli dashboard
+```
+
+- Jab tak terminal khula hai, dashboard chalta rahega (browser mein `http://127.0.0.1:8765`)
+- Terminal band karoge to dashboard band ho jayega — koi data loss nahi, clips/settings `~/.clipforge/` mein safe rehte hain
+- Settings kabhi bhi badal sakte ho: dashboard → **Settings** (dobara wizard chalane ki zaroorat nahi)
+
 ---
 
 ## Quickstart (3 steps)
