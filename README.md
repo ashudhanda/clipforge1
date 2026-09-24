@@ -15,6 +15,20 @@ No AI voiceover. Your original audio stays untouched.
 
 ---
 
+## Quick Start (4 steps)
+
+```bash
+git clone https://github.com/ashudhanda/clipforge
+cd clipforge && pip install -r requirements.txt
+python -m clipforge.cli setup      # first-time setup (asks once, saves on your system)
+python -m clipforge.cli dashboard  # opens the dashboard in your browser
+```
+
+That's it — the dashboard walks you through everything (generate clips,
+preview, upload, schedule). Beginners never need the terminal after this.
+
+---
+
 ## Quickstart (3 steps)
 
 **1. Setup** — one command, works on Windows/Mac/Linux:
