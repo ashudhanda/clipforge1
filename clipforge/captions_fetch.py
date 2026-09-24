@@ -97,7 +97,7 @@ def fetch(video_url, langs=("en.*",)):
     try:
         with tempfile.TemporaryDirectory(prefix="cf_subs_") as td:
             out = str(Path(td) / "subs")
-            cmd = ([C.ytdlp_path(), "--skip-download", "--write-subs",
+            cmd = (C.ytdlp_cmd() + ["--skip-download", "--write-subs",
                     "--write-auto-subs", "--sub-format", "vtt",
                     "--sub-langs", ",".join(langs),
                     "-o", out, "--no-warnings"]
