@@ -15,17 +15,20 @@ No AI voiceover. Your original audio stays untouched.
 
 ---
 
-## Quick Start (4 steps)
+## Quick Start (3 steps)
 
 ```bash
 git clone https://github.com/ashudhanda/clipforge
-cd clipforge && pip install -r requirements.txt
-python -m clipforge.cli setup      # first-time setup (asks once, saves on your system)
-python -m clipforge.cli dashboard  # opens the dashboard in your browser
+cd clipforge
+python setup.py
 ```
 
-That's it — the dashboard walks you through everything (generate clips,
-preview, upload, schedule). Beginners never need the terminal after this.
+Bas — `setup.py` sab kuch install karke **dashboard khud browser mein khol
+deta hai**. Pehli baar hai to dashboard ke andar hi setup wizard aayega
+(channel name, niche, caption style) — uske baad terminal ki zaroorat nahi.
+
+Manual route (optional): `pip install -r requirements.txt`, phir
+`python -m clipforge.cli dashboard`.
 
 ---
 
