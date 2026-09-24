@@ -183,15 +183,8 @@
               <button class="btn ghost sm" id="ytDisconnect">Disconnect</button>
             </div>
             <details class="hint">
-              <summary>Pehli baar? JSON kaise laayein (2 min)</summary>
-              <ol>
-                <li><code>console.cloud.google.com</code> → new project</li>
-                <li>"YouTube Data API v3" enable karo</li>
-                <li>Credentials → Create Credentials → OAuth client ID (Desktop app)</li>
-                <li>Download ki hui <code>client_secret.json</code> file kholo, poora content copy karke upar paste karo → Save dabao</li>
-                <li>Phir "Connect YouTube" dabao — browser khulega, Google login karo</li>
-              </ol>
-              <p class="muted small">Note: sirf API key se upload <b>nahi</b> hota — YouTube ko Google login (OAuth) chahiye hota hai. Ye JSON wahi login enable karta hai.</p>
+              <summary>📖 Poora setup guide — click-by-click (5 min, ek baar)</summary>
+              <div class="yt-guide-body"></div>
             </details>
           </div>
           <div class="card">
@@ -242,17 +235,20 @@
       <label class="field"><span>Upload privacy</span>
         <select id="wPrivacy"><option value="public">public</option><option value="unlisted">unlisted</option><option value="private">private</option></select>
       </label>
-      <p class="muted small">YouTube upload ke liye login zaroori hai (Google Cloud ka OAuth client ek baar banana padta hai):</p>
-      <div class="btn-row"><button class="btn ghost sm" id="wYtConnect">Connect YouTube</button><span class="muted small" id="wYtStatus"></span></div>
+      <p class="muted small">YouTube upload ke liye ek baar Google login jodna padta hai. Neeche JSON paste karo, Save dabao, phir Connect:</p>
+      <label class="field"><span>Google OAuth JSON <span class="muted">(paste client_secret.json content)</span></span>
+        <textarea id="wCsJson" rows="3" placeholder='{"installed": {"client_id": "...", ...}}' spellcheck="false"></textarea>
+      </label>
+      <div class="btn-row">
+        <button class="btn ghost sm" id="wCsSave">💾 Save OAuth JSON</button>
+        <button class="btn ghost sm" id="wYtConnect">Connect YouTube</button>
+      </div>
+      <p class="muted small" id="wYtStatus"></p>
       <details class="hint">
-        <summary>client_secret.json kaise banayein</summary>
-        <ol>
-          <li><code>console.cloud.google.com</code> → new project</li>
-          <li>"YouTube Data API v3" enable karo</li>
-          <li>Credentials → Create Credentials → OAuth client ID (Desktop app)</li>
-          <li>Download karke <code>~/.clipforge/client_secret.json</code> naam se rakho</li>
-        </ol>
+        <summary>📖 Poora setup guide — click-by-click (5 min, ek baar)</summary>
+        <div class="yt-guide-body"></div>
       </details>
+      <p class="muted small">Skip bhi kar sakte ho — baad mein Settings → YouTube se jod lena.</p>
     </div>
 
     <div class="btn-row">
