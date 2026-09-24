@@ -8,6 +8,9 @@ Uses `yt-dlp ytsearchN:"query"` (no API key needed), then filters:
 
 Returns [{video_id, title, channel, duration_s, view_count, upload_date,
 url}]. Never raises — returns [] when search fails (caller logs plainly).
+
+On failure, `last_error` is set to "missing" (yt-dlp not installed)
+or "search_failed" (network/bot-check) so callers can explain why.
 """
 
 import json
@@ -20,7 +23,13 @@ from . import config as C
 log = logging.getLogger("clipforge")
 
 def _ytdlp():
-    return C.ytdlp_path()
+    return C.ytdlp_cmd()
+
+
+# Set by discover(): "" on success, otherwise a short reason code —
+# "missing" (yt-dlp not installed) or "search_failed" (network/bot-check).
+# pipeline.py uses this to show an honest, actionable message.
+last_error = ""
 
 
 def _impersonation_ok():
@@ -65,7 +74,7 @@ def _run(cmd, timeout=180):
 
 def video_meta(url):
     """Title/channel for one video URL — no download. Returns {} on failure."""
-    out = _run([_ytdlp(), "--skip-download", "--print",
+    out = _run(_ytdlp() + ["--skip-download", "--print",
                 "%(.{title,channel})j", url] + antibot_args())
     if not out:
         return {}
@@ -81,7 +90,7 @@ def _full_meta(url):
     Used as stage 2 when the flat search entry is missing fields
     (duration especially: flat playlist entries don't always carry it).
     """
-    cmd = ([_ytdlp(), "--skip-download",
+    cmd = (_ytdlp() + ["--skip-download",
             "--print", "%(.{id,title,channel,duration,view_count,upload_date,live_status})j",
             url] + antibot_args())
     out = _run(cmd, timeout=120)
@@ -111,12 +120,21 @@ def discover(niche, max_results=None):
     query = f"{keywords} full episode"
     n = max_results or r_cfg.get("max_results", 15)
 
-    cmd = ([_ytdlp(), "--skip-download", "--flat-playlist",
+    global last_error
+    last_error = ""
+    if not C.ytdlp_available():
+        last_error = "missing"
+        log.error("yt-dlp nahi mila — setup.py dobara chalao "
+                  "(pip install yt-dlp).")
+        return []
+
+    cmd = (_ytdlp() + ["--skip-download", "--flat-playlist",
             "--print", "%(.{id,title,channel,duration,view_count,upload_date})j",
             f"ytsearch{n}:{query}"]
            + antibot_args())
     out = _run(cmd)
     if out is None:
+        last_error = "search_failed"
         log.warning("YouTube search failed (network or bot-check). "
                     "Try again later, or paste a video link directly.")
         return []
