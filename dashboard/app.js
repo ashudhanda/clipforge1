@@ -409,7 +409,7 @@ async function renderSettings() {
   $("sGemKey").value = ""; $("sOaiKey").value = "";
   $("sGemKey").placeholder = ks.gemini_set ? "•••••• (set hai)" : "API key daalo";
   $("sOaiKey").placeholder = ks.openai_set ? "•••••• (set hai)" : "API key daalo (optional)";
-  refreshYtStatus();
+  refreshYtStatus(); refreshCsStatus();
 }
 function toggleLlmFields() {
   const p = $("sLlm").value;
@@ -470,6 +470,20 @@ $("ytDisconnect").addEventListener("click", async () => {
   await api("youtube_disconnect", {});
   toast("YouTube disconnected");
   refreshYtStatus(); refreshPills();
+});
+async function refreshCsStatus() {
+  const r = await api("client_secret_status", {});
+  $("csStatus").innerHTML = r.configured
+    ? '🔑 OAuth JSON <b style="color:var(--primary)">saved ✓</b> — ab "Connect YouTube" dabao.'
+    : '🔑 OAuth JSON <b>saved nahi hai</b> — neeche steps se lao aur paste karo.';
+}
+$("csSave").addEventListener("click", async () => {
+  const v = $("csJson").value;
+  const r = await api("save_client_secret", { json_text: v });
+  if (!r.ok) { toast(r.error || "Save fail", true); return; }
+  $("csJson").value = "";
+  toast("OAuth JSON save ho gaya ✓ — ab Connect YouTube dabao");
+  refreshCsStatus();
 });
 $("clearCache").addEventListener("click", async () => {
   if (!confirm("Scratch cache saaf kar dun? (Clips/config safe rahenge)")) return;
