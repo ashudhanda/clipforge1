@@ -9,6 +9,14 @@ What it does (idempotent — safe to run again anytime):
   4. Creates ~/.clipforge/ (config, clips, tmp, assets)
   5. Copies the face-detection model into ~/.clipforge/assets/
   6. Copies config.example.yaml -> ~/.clipforge/config.yaml (if missing)
+  7. Opens the dashboard in your browser (first-run wizard lives inside
+     the dashboard, so beginners never need the terminal again)
+
+After cloning, this is the ONLY command a beginner needs: the dashboard
+opens by itself when setup finishes.
+
+Optional:
+    python setup.py --no-dashboard        install only, don't open dashboard
 
 Optional:
     python setup.py --pre-download-models   also fetch the transcription
@@ -85,10 +93,24 @@ def main():
         WhisperModel("base", device="cpu", compute_type="int8")
         print("model ready.")
 
-    # 7. console script hint
-    print("\nSetup complete!")
-    print("Agla step:  python -m clipforge.cli setup")
-    print("(ya: pip install -e .  phir seedha `clipforge` command)")
+    # 7. dashboard kholo (beginners yahin se aage badhenge)
+    if "--no-dashboard" not in sys.argv:
+        launch_dashboard()
+    else:
+        print("\nSetup complete!")
+        print("Dashboard kholne ke liye:  python -m clipforge.cli dashboard")
+
+
+def launch_dashboard():
+    """Start the local dashboard server and open it in the browser."""
+    print("\n-- Dashboard khul raha hai browser mein...")
+    print("   (Pehli baar hai to dashboard ke andar hi setup wizard aayega -")
+    print("    terminal mein kuch nahi karna.)")
+    try:
+        from clipforge import dashboard_server as DS
+    except ImportError as e:
+        sys.exit(f"dashboard_server import fail: {e}")
+    DS.run(open_browser=True)
 
 
 if __name__ == "__main__":
