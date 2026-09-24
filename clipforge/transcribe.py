@@ -40,7 +40,7 @@ def _model():
 def download_audio(video_url, out_dir):
     """Audio-only download. Returns Path or None."""
     out = Path(out_dir) / "audio.m4a"
-    cmd = ([C.ytdlp_path(), "-x", "--audio-format", "m4a",
+    cmd = (C.ytdlp_cmd() + ["-x", "--audio-format", "m4a",
             "--audio-quality", "5",
             "-o", str(out), "--no-warnings"]
            + antibot_args() + [video_url])
