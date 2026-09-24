@@ -146,6 +146,16 @@
             <div class="check-row"><input type="checkbox" id="sKids"><label for="sKids">Made for kids channel</label></div>
           </div>
           <div class="card">
+            <h3>✂️ Clips & research</h3>
+            <label class="field"><span>Min clip length (sec)</span><input type="number" id="sMinClip" min="5" max="120"></label>
+            <label class="field"><span>Max clip length (sec)</span><input type="number" id="sMaxClip" min="10" max="180"></label>
+            <label class="field"><span>Default hashtags</span><input type="text" id="sHashtags" placeholder="#Shorts #podcast"></label>
+            <label class="field"><span>Source video: min length (min)</span><input type="number" id="sMinDur" min="1" max="600"></label>
+            <label class="field"><span>Source video: max age (days)</span><input type="number" id="sMaxAge" min="1" max="365"></label>
+            <label class="field"><span>Source video: min views</span><input type="number" id="sMinViews" min="0" step="1000"></label>
+            <p class="muted small">Research filters decide kaunsi videos auto-mode mein pick hongi.</p>
+          </div>
+          <div class="card">
             <h3>🤖 AI — best moment ranking (optional)</h3>
             <label class="field"><span>Provider</span>
               <select id="sLlm">
