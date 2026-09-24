@@ -491,6 +491,52 @@ $("clearCache").addEventListener("click", async () => {
   toast(r.ok ? `${r.cleared} items saaf ho gaye` : ("Error: " + r.error), !r.ok);
 });
 
+/* ---------------- shared YouTube OAuth guide (single source) ---------------- */
+const YT_GUIDE_HTML = `
+<p class="muted small"><b>A. Google Cloud project banao</b></p>
+<ol>
+  <li><code>console.cloud.google.com</code> kholo → apne <b>Gmail</b> se sign in karo</li>
+  <li>Upar top-bar mein <b>"Select a project"</b> (ya project ka naam) par click karo → <b>"New Project"</b></li>
+  <li>Project name likho (jaise <code>ClipForge</code>) → <b>Create</b> → 10-20 sec wait karo, phir top-bar se wahi project select karo</li>
+</ol>
+<p class="muted small"><b>B. YouTube Data API v3 enable karo</b></p>
+<ol start="4">
+  <li>Left side <b>☰ menu → "APIs & Services" → "Library"</b></li>
+  <li>Search box mein <code>YouTube Data API v3</code> likho → result par click karo → bada neela <b>"Enable"</b> button dabao</li>
+</ol>
+<p class="muted small"><b>C. OAuth consent screen (Google login ke liye zaroori)</b></p>
+<ol start="6">
+  <li>Left menu → <b>"APIs & Services" → "OAuth consent screen"</b></li>
+  <li><b>User Type: External</b> chuno → Create / Get Started</li>
+  <li>App name: <code>ClipForge</code>, User support email: <b>apna Gmail</b>, Developer contact: <b>apna Gmail</b> → Save and Continue</li>
+  <li>Scopes wala page: kuch mat chhedo → Save and Continue</li>
+  <li><b>"Test users"</b> page → <b>"Add users"</b> → apna Gmail add karo → Save<br><span class="muted small">⚠️ Ye sabse zaroori step hai — bina iske Google login "Access blocked" bolega.</span></li>
+</ol>
+<p class="muted small"><b>D. OAuth client (JSON) banao</b></p>
+<ol start="11">
+  <li>Left menu → <b>"APIs & Services" → "Credentials"</b></li>
+  <li>Upar <b>"Create Credentials" → "OAuth client ID"</b></li>
+  <li>"Application type" mein <b>"Desktop app"</b> chuno → <b>Create</b></li>
+  <li><b>"Download JSON"</b> dabao — file download ho jayegi</li>
+</ol>
+<p class="muted small"><b>E. ClipForge se jodo</b></p>
+<ol start="15">
+  <li>Download ki hui file kholo (Notepad mein), <b>poora content copy</b> karo</li>
+  <li>Is page par upar wale box mein <b>paste</b> karo → <b>"Save OAuth JSON"</b> dabao</li>
+  <li><b>"Connect YouTube"</b> dabao → browser khulega → apna Gmail chuno</li>
+  <li><b>"Google hasn't verified this app"</b> aaye to ghabrao mat → <b>"Advanced"</b> → <b>"Go to ClipForge (unsafe)"</b> → Continue</li>
+</ol>
+<p class="muted small">✅ Ho gaya! Token khud refresh hota rahega.<br>
+<span class="muted small">Note: Google test mode mein login har <b>7 din</b> mein expire hota hai — bas dobara "Connect YouTube" daba dena (1 min ka kaam).</span></p>
+<p class="muted small">⚠️ <b>Zaroori:</b> jab tak Google tumhara app verify nahi karta, API se upload ki hui videos YouTube <b>zabardasti private</b> kar deta hai — chahe dashboard mein public chuno. Public upload ke liye Google Cloud mein app verification karwana padta hai.<br>
+<span class="muted small">Aur haan — sirf API key se upload <b>nahi</b> hota, YouTube ko Google login (OAuth) hi chahiye hota hai.</span></p>`;
+
+function injectYtGuide() {
+  document.querySelectorAll(".yt-guide-body").forEach((el) => {
+    el.innerHTML = YT_GUIDE_HTML;
+  });
+}
+
 /* ---------------- first-run wizard ---------------- */
 let wStep = 0;
 async function maybeWizard() {
@@ -555,6 +601,12 @@ $("wYtConnect").addEventListener("click", async () => {
     if (s.result === true) { $("wYtStatus").textContent = "✅ Connected!"; break; }
   }
 });
+$("wCsSave").addEventListener("click", async () => {
+  const r = await api("save_client_secret", { json_text: $("wCsJson").value });
+  if (!r.ok) { $("wYtStatus").textContent = "⚠️ " + (r.error || "fail"); return; }
+  $("wCsJson").value = "";
+  $("wYtStatus").textContent = "✅ OAuth JSON save ho gaya — ab Connect YouTube dabao";
+});
 
 /* ---------------- boot ---------------- */
 (async function boot() {
@@ -570,5 +622,6 @@ $("wYtConnect").addEventListener("click", async () => {
   $("nicheList").innerHTML = keys.map((k) => `<option value="${esc(k)}">`).join("");
   refreshPills();
   setInterval(refreshPills, 60000);
+  injectYtGuide();
   maybeWizard();
 })();
