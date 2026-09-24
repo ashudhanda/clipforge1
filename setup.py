@@ -94,6 +94,14 @@ def main():
         print("model ready.")
 
     # 7. dashboard kholo (beginners yahin se aage badhenge)
+    # Mac double-click launcher ko executable banao (zip download mein bit kho jaye to)
+    cmd_file = REPO / "Start ClipForge.command"
+    if cmd_file.exists() and os.name != "nt":
+        try:
+            mode = cmd_file.stat().st_mode
+            cmd_file.chmod(mode | 0o111)
+        except OSError:
+            pass
     if "--no-dashboard" not in sys.argv:
         launch_dashboard()
     else:
