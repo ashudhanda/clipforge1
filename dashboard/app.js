@@ -390,6 +390,14 @@ async function renderSettings() {
   $("sHook").value = cfg.hook_mode || "card";
   $("sPrivacy").value = cfg.privacy || "public";
   $("sKids").checked = !!cfg.made_for_kids;
+  $("sMinClip").value = cfg.min_clip_s || 25;
+  $("sMaxClip").value = cfg.max_clip_s || 58;
+  $("sHashtags").value = (cfg.hashtags || []).join(" ");
+  const rs = cfg.research || {};
+  $("sMinDur").value = rs.min_duration_min || 20;
+  $("sMaxAge").value = rs.max_age_days || 30;
+  $("sMinViews").value = rs.min_views || 50000;
+  window._cfgCache = cfg;
   const llm = cfg.llm || {};
   $("sLlm").value = llm.provider || "none";
   $("sModel").value = llm.model || "";
@@ -412,6 +420,7 @@ $("sLlm").addEventListener("change", toggleLlmFields);
 
 $("saveSettings").addEventListener("click", async () => {
   const btn = $("saveSettings"); btn.disabled = true;
+  const oldRs = (window._cfgCache && window._cfgCache.research) || {};
   const patch = {
     channel_name: $("sChannel").value.trim(),
     niche: $("sNiche").value,
@@ -420,6 +429,14 @@ $("saveSettings").addEventListener("click", async () => {
     hook_mode: $("sHook").value,
     privacy: $("sPrivacy").value,
     made_for_kids: $("sKids").checked,
+    min_clip_s: Math.max(5, parseInt($("sMinClip").value, 10) || 25),
+    max_clip_s: Math.max(10, parseInt($("sMaxClip").value, 10) || 58),
+    hashtags: $("sHashtags").value.split(/\s+/).map(h => h.trim()).filter(Boolean),
+    research: Object.assign({}, oldRs, {
+      min_duration_min: Math.max(1, parseInt($("sMinDur").value, 10) || 20),
+      max_age_days: Math.max(1, parseInt($("sMaxAge").value, 10) || 30),
+      min_views: Math.max(0, parseInt($("sMinViews").value, 10) || 0),
+    }),
     llm: { provider: $("sLlm").value, model: $("sModel").value.trim(), base_url: $("sBaseUrl").value.trim() },
   };
   const r = await api("update_config", { patch });
