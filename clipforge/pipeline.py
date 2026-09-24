@@ -231,16 +231,31 @@ def auto_mode(niche, n_clips=None, caption_style=None, progress_cb=None):
         _cb(progress_cb, "research", 0.05,
             f"'{niche}' mein trending long videos dhundh rahe hain...")
         cands = RS.discover(niche)
-        cands = [c for c in cands
+        fresh = [c for c in cands
                  if not store.source_video_used(c["url"])]
         if not cands:
-            msg = ("Koi fresh video nahi mili — sab use ho chuki hain ya "
-                   "search fail hua. Thodi der baad try karo.")
+            if RS.last_error == "missing":
+                msg = ("yt-dlp nahi mila — `python setup.py` dobara chalao "
+                       "(yt-dlp install hoga), phir Generate dabao.")
+            else:
+                msg = ("YouTube search fail hua (network ya bot-check). "
+                       "Thodi der baad try karo — ya Link mode mein seedha "
+                       "video link paste kar do.")
             _cb(progress_cb, "research", 0.1, msg)
             result["error"] = msg
             store.update_job(job_id, status="done", result=result,
                              message=msg)
             return result
+        if not fresh:
+            msg = ("Is niche ki mili hui videos sab use ho chuki hain. "
+                   "Kal naye videos ke saath try karo — ya Link mode mein "
+                   "seedha video link paste kar do.")
+            _cb(progress_cb, "research", 0.1, msg)
+            result["error"] = msg
+            store.update_job(job_id, status="done", result=result,
+                             message=msg)
+            return result
+        cands = fresh
         v = cands[0]
         _cb(progress_cb, "research", 0.12,
             f"Mili: {v['title'][:70]} ({v['channel']})")
