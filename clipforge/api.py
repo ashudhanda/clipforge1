@@ -14,6 +14,7 @@ uploader / scheduler.
 
 import threading
 import time
+import json
 
 from . import config as C
 from . import store
@@ -258,10 +259,9 @@ def youtube_connect():
         return {"ok": True, "started": True, "note": "login already chal raha hai"}
     if not C.TOKEN_FILE.exists() and not (C.HOME / "client_secret.json").exists():
         return {"ok": False,
-                "error": "client_secret.json nahi mila ~/.clipforge/ mein. "
-                         "Pehle Google Cloud console se OAuth client (Desktop app) "
-                         "banao, download karke client_secret.json naam se "
-                         "~/.clipforge/ mein rakho."}
+                "error": "OAuth JSON set nahi hai. Dashboard → Settings → "
+                         "YouTube connection mein client_secret.json ka content "
+                         "paste karke Save dabao, phir Connect karo."}
 
     def _run():
         global _oauth_running
@@ -282,6 +282,51 @@ def youtube_disconnect():
         C.TOKEN_FILE.unlink(missing_ok=True)
     except OSError:
         pass
+    return {"ok": True}
+
+
+def client_secret_status():
+    """Is the Google OAuth client_secret.json configured? (never returns its content)"""
+    p = C.HOME / "client_secret.json"
+    if not p.exists():
+        return {"configured": False}
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+        section = data.get("installed") or data.get("web") or {}
+        ok = bool(section.get("client_id") and section.get("client_secret"))
+        return {"configured": ok}
+    except Exception:
+        return {"configured": False, "invalid": True}
+
+
+def save_client_secret(json_text):
+    """Save Google OAuth client credentials pasted from the dashboard.
+
+    Accepts the full client_secret.json content (as downloaded from Google
+    Cloud Console). Validates structure, writes with 0600 permissions.
+    The secret is never echoed back.
+    """
+    import json as _json
+    text = (json_text or "").strip()
+    if not text:
+        return {"ok": False, "error": "khaali hai — JSON paste karo"}
+    try:
+        data = _json.loads(text)
+    except Exception:
+        return {"ok": False,
+                "error": "ye valid JSON nahi lag raha. Google Cloud se download "
+                         "ki hui file ka poora content paste karo."}
+    section = data.get("installed") or data.get("web")
+    if not isinstance(section, dict) or not section.get("client_id") \
+            or not section.get("client_secret"):
+        return {"ok": False,
+                "error": "is JSON mein OAuth client_id/client_secret nahi mile. "
+                         "OAuth client ID (Desktop app) wali file download karo — "
+                         "sirf API key se upload nahi hota."}
+    C.HOME.mkdir(parents=True, exist_ok=True)
+    dest = C.HOME / "client_secret.json"
+    dest.write_text(_json.dumps(data, indent=2), encoding="utf-8")
+    C.lock_down(dest)
     return {"ok": True}
 
 
