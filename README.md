@@ -83,8 +83,9 @@ Uploads use the official YouTube Data API with your own Google login:
 1. Go to [console.cloud.google.com](https://console.cloud.google.com) → create a project
 2. Enable **YouTube Data API v3** (APIs & Services → Library)
 3. Credentials → Create Credentials → **OAuth client ID** → Desktop app
-4. Download the JSON → save as `~/.clipforge/client_secret.json`
-5. Run `python -m clipforge.cli setup` → browser opens → sign in with Google
+4. Download the JSON → dashboard kholo → **Settings → YouTube connection** → JSON paste karo → **Save OAuth JSON**
+   (manual route: file ko `~/.clipforge/client_secret.json` naam se rakho)
+5. **Connect YouTube** dabao → browser khulega → Google se sign in karo
 
 Done. The token refreshes itself forever.
 
