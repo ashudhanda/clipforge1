@@ -76,22 +76,38 @@ instead of `python -m clipforge.cli`.
 
 ---
 
-## YouTube upload setup (one time)
+## YouTube upload setup (one time, ~5 min)
 
-Uploads use the official YouTube Data API with your own Google login:
+Uploads use the official YouTube Data API with your own Google login.
+Follow every step — especially **Test users** (step 9), else Google blocks the login:
 
-1. Go to [console.cloud.google.com](https://console.cloud.google.com) → create a project
-2. Enable **YouTube Data API v3** (APIs & Services → Library)
-3. Credentials → Create Credentials → **OAuth client ID** → Desktop app
-4. Download the JSON → dashboard kholo → **Settings → YouTube connection** → JSON paste karo → **Save OAuth JSON**
-   (manual route: file ko `~/.clipforge/client_secret.json` naam se rakho)
-5. **Connect YouTube** dabao → browser khulega → Google se sign in karo
+**A. Project banao**
+1. Go to [console.cloud.google.com](https://console.cloud.google.com) → sign in with your Gmail
+2. Top bar → **Select a project** → **New Project** → name it (e.g. `ClipForge`) → Create → select it
 
-Done. The token refreshes itself forever.
+**B. YouTube Data API v3 enable karo**
+3. ☰ menu → **APIs & Services → Library** → search `YouTube Data API v3` → **Enable**
+
+**C. OAuth consent screen (login ke liye zaroori)**
+4. ☰ menu → **APIs & Services → OAuth consent screen** → User Type: **External**
+5. App name `ClipForge`, support email + developer email = your Gmail → Save and Continue (×2)
+6. **Test users → Add users → apna Gmail add karo** → Save ⚠️ (bina iske "Access blocked" aayega)
+
+**D. OAuth client JSON banao**
+7. ☰ menu → **APIs & Services → Credentials → Create Credentials → OAuth client ID** → type **Desktop app** → Create → **Download JSON**
+
+**E. ClipForge se jodo**
+8. Dashboard kholo → **Settings → YouTube connection** → downloaded file ka poora content paste karo → **Save OAuth JSON**
+9. **Connect YouTube** dabao → browser mein Gmail chuno → **"Google hasn't verified this app"** aaye to **Advanced → Go to ClipForge (unsafe)** → Continue
+
+Done! Token khud refresh hota rahega. Note: test-mode login har **7 din** mein expire hota hai — bas dobara Connect dabana hota hai.
+
+⚠️ **Zaroori:** jab tak Google tumhara app verify nahi karta, API se upload ki hui videos YouTube **zabardasti private** kar deta hai — chahe dashboard mein public chuno. Public upload ke liye Google Cloud mein app verification karwana padta hai.
 
 **Quota note:** Google gives 10,000 free API units/day; one upload costs
-1,600 (~6 uploads/day). ClipForge tracks this and automatically pushes
-extra scheduled uploads to the next day.
+~100 units (Dec 2025 se pehle 1,600 tha — Google ke hisaab se figure badal
+sakta hai). ClipForge tracks this and automatically pushes extra scheduled
+uploads to the next day.
 
 ---
 
