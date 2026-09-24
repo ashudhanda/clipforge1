@@ -38,26 +38,54 @@ last_stderr = ""
 last_stats = {}
 
 
-def _impersonation_ok():
-    """True when yt-dlp can do TLS impersonation (needs curl_cffi)."""
+_impersonate_target_cache = "unprobed"
+
+
+def impersonate_target():
+    """Newest available Chrome impersonation target (e.g. "chrome-136"), or
+    None when impersonation isn't usable.
+
+    Probed once per process via `yt-dlp --list-impersonate-targets` and
+    cached. Never hardcoded — hardcoding is what broke real users when
+    their curl_cffi version didn't have the assumed target.
+    """
+    global _impersonate_target_cache
+    if _impersonate_target_cache != "unprobed":
+        return _impersonate_target_cache
+    target = None
     try:
-        import curl_cffi  # noqa: F401
-        return True
-    except ImportError:
-        return False
+        p = subprocess.run(_ytdlp() + ["--list-impersonate-targets"],
+                           capture_output=True, text=True, timeout=30)
+        if p.returncode == 0:
+            best = 0
+            for line in (p.stdout or "").splitlines():
+                line = line.strip().lower()
+                # rows look like: "chrome-136      macos-15     curl_cffi"
+                if line.startswith("chrome-"):
+                    num = "".join(ch for ch in line.split()[0][7:]
+                                  if ch.isdigit())
+                    if num.isdigit() and int(num) > best:
+                        best = int(num)
+            if best:
+                target = f"chrome-{best}"
+    except Exception:
+        target = None
+    _impersonate_target_cache = target
+    return target
 
 
 def antibot_args():
     """Args that keep yt-dlp working on strict networks.
 
     player_client=web_embedded,default completes downloads where other
-    clients get 403s; chrome-136 TLS impersonation helps on datacenter IPs
-    (skipped gracefully when curl_cffi isn't installed);
-    cookies.txt (if the user exported one) is the strongest signal.
+    clients get 403s; TLS impersonation uses the newest Chrome target this
+    install actually supports (probed, never assumed); cookies.txt (if the
+    user exported one) is the strongest signal.
     """
     args = ["--extractor-args", "youtube:player_client=web_embedded,default"]
-    if _impersonation_ok():
-        args += ["--impersonate", "chrome-136"]
+    tgt = impersonate_target()
+    if tgt:
+        args += ["--impersonate", tgt]
     cookies = C.HOME / "cookies.txt"
     if cookies.exists():
         args += ["--cookies", str(cookies)]
